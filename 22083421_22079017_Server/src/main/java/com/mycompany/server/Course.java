@@ -1,10 +1,24 @@
 package com.mycompany.server;
 
+import java.util.ArrayList;
+
 public class Course {
    private String id;
-   private final Module[] modules = new Module[5];
+   private final ArrayList<Module> modules = new ArrayList<>();
+
 
    private int moduleCount;
+   public void addModule(Module module){
+       if(moduleCount<5) {
+           modules.add(module);
+       } else if (moduleCount==5) {
+           System.out.println("This course already has 5 modules");
+
+       }
+   }
+   public void removeModule(Module module){
+       modules.remove(module);
+   }
 
     public String getId() {
         return id;
@@ -22,7 +36,7 @@ public class Course {
         this.id = id;
     }
 
-    public Module[] getModules() {
+    public ArrayList<Module> getModules() {
         return modules;
     }
 

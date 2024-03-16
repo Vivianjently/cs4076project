@@ -56,5 +56,11 @@ public class Module {
     public Module(String id){
         this.id = id;
     }
+    public Module(String id,LocalDate date,String room){
+        this.id = id;
+        this.date = date;
+        this.room = room;
+
+    }
 
 }
