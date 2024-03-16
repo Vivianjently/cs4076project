@@ -1,8 +1,9 @@
-module com.example.javafxproject {
+module com.example.client {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.graphics;
 
 
-    opens com.example.javafxproject to javafx.fxml;
-    exports com.example.javafxproject;
+    opens com.example.client to javafx.fxml;
+    exports com.example.client;
 }

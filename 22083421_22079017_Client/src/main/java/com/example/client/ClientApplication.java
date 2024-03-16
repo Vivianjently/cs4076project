@@ -1,4 +1,6 @@
-package com.example.javafxproject;
+package com.example.client;
+
+
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -21,4 +23,3 @@ public class ClientApplication extends Application {
         launch();
     }
 }
-
