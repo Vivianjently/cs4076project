@@ -107,7 +107,7 @@ public class ClientController {
         datePicker.setVisible(false);
 
         try {
-            connection.sendMessage("TERMINATE");
+            connection.sendMessage("TERMINATE_CONNECTION=---");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -119,19 +119,21 @@ public class ClientController {
 
 
     @FXML
-    void submitAction1(ActionEvent event) throws IOException {
+    public void submitAction1(ActionEvent event) throws IOException {
         String startTime = time.getText().split("-")[0];
         String endTime = time.getText().split("-")[1];
-        connection.sendMessage("ADD CLASS = "+datePicker.getAccessibleText()+","+course.getText()+","+moduleCode.getText()+","+startTime+endTime+","+room.getText());
+        connection.sendMessage("ADD_CLASS="+datePicker.getValue()+","+course.getText()+","+moduleCode.getText()+","+startTime+","+endTime+","+room.getText());
     }
-    void submit2(ActionEvent event) throws IOException {
+    @FXML
+    public void submitAction2(ActionEvent event) throws IOException {
         String startTime = time.getText().split("-")[0];
         String endTime = time.getText().split("-")[1];
-        connection.sendMessage("REMOVE CLASS = "+datePicker.getAccessibleText()+","+course.getText()+","+moduleCode.getText()+","+startTime+endTime+","+room.getText());
+        connection.sendMessage("REMOVE_CLASS="+datePicker.getValue()+","+course.getText()+","+moduleCode.getText()+","+startTime+","+endTime+","+room.getText());
     }
-    void submit3(ActionEvent event)throws IOException{
+    @FXML
+    public void submitAction3(ActionEvent event)throws IOException{
 
-        connection.sendMessage("DISPLAY = "+course.getText());
+        connection.sendMessage("DISPLAY_SCHEDULE="+course.getText());
 
     }
 

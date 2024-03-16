@@ -33,25 +33,21 @@ public class TCPCommunication {
     public   void sendMessage(String message) throws IOException {
         out.println(message);
 
+        String response = in.readLine();
 
-    }
-    public   String receiveMessage(){
-        try {
-            String response = in.readLine();
-            return response;
-        }catch (IOException e){
-            System.err.println("Error while communicating with the server.");
-            e.printStackTrace();
-            return null;
+        if(response.equals("Connection Terminated!")){
+            closeConnection();
+            System.exit(0);
         }
 
+        System.out.println(response);
     }
     public  void closeConnection(){
         try {
             link.close();
             System.out.println("Connection has been closed");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.exit(1);
         }
     }
 }

@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Server {
     private static ArrayList<Course> programmes = new ArrayList<>();
@@ -18,6 +19,7 @@ public class Server {
         try {
             while (true) {
                 Socket link = servsock.accept();
+                socketHandler(link);
             }
         } catch (IOException e) {
             System.out.println("Connection failed");
@@ -25,19 +27,27 @@ public class Server {
         }
     }
     private static void socketHandler(Socket link) {
-        while (true) {
             try {
                 BufferedReader in = new BufferedReader(new InputStreamReader(link.getInputStream()));
                 PrintWriter out = new PrintWriter(link.getOutputStream(), true);
 
-                String message = in.readLine();
-                System.out.println("Message received from client:" + " " + message);
-                out.println(processedMessage(message));
+                while(true) {
+                    String message = in.readLine();
+                    System.out.println("Message received from client: " + message);
+
+                    String response = processedMessage(message);
+
+                    if(response.equals("Connection Terminated!")){
+                        out.println(response);
+                        TERMINATE();
+                    }
+
+                    out.println();
+                }
 
             } catch (IOException e) {
                 System.out.println("Input or Output not detected");
             }
-        }
     }
 
     private static String processedMessage(String message) {
@@ -58,8 +68,7 @@ public class Server {
                     DISPLAY_SCHEDULE(data);
                     return("Schedule displayed!");
                 case "TERMINATE_CONNECTION":
-                    TERMINATE();
-                    return ("Connection Terminated!");
+                    return "Connection Terminated!";
 
             }
         } catch (IncorrectActionException e) {
@@ -89,12 +98,19 @@ public class Server {
             System.out.println("Please enter data in all the fields");
             throw new IncorrectActionException("Please check if all fields are filled!");
         }
+
+        //Goes through each module in every course and checks if the time overlaps.
+        //Then it checks if this module is being added to the course, if so then throw overlap error.
+        //It also checks to see if room number is the same because then the module overlaps with a module from another course
         for (int i = 0; i < programmes.size(); i++) {
-            for (int k = 0; k < programmes.get(i).getModuleCount(); k++) {
-                if (programmes.get(k).getModules().get(k).getDate() == LocalDate.parse(date) && programmes.get(k).getModules().get(k).getStartTime() == LocalTime.parse(startTime)) {
-                    throw new IncorrectActionException("There is a clash in timing schedule!");
-                } else if (programmes.get(k).getModules().get(k).getDate() == LocalDate.parse(date) && programmes.get(k).getModules().get(k).getStartTime().isBefore(LocalTime.parse(endTime))) {
-                    throw new IncorrectActionException("There is a clash in timing schedule!");
+            for (int k = 0; k < programmes.get(i).getModules().size(); k++) {
+                Module curMod = programmes.get(i).getModules().get(k);
+                if(curMod.getStartTime().isBefore(LocalTime.parse(startTime)) &&
+                   LocalTime.parse(endTime).isBefore(curMod.getEndTime()) &&
+                   curMod.getDate().equals(LocalDate.parse(date))) {
+                    if (curMod.getRoom().equals(room) || programmes.get(i).getId().equals(splitData[1])){
+                        throw new IncorrectActionException("Missing data");
+                    }
                 }
             }
         }
@@ -113,7 +129,6 @@ public class Server {
             Course programme = new Course(course);
             programme.addModule(Class);
             programmes.add(programme);
-            isFound = true;
         }
     }
 
@@ -157,8 +172,9 @@ public class Server {
     private static void TERMINATE() {
         try {
             link.close();
+            System.exit(0);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.exit(0);
         }
 
     }
@@ -167,8 +183,8 @@ public class Server {
         String course;
         course = data;
        for(int i = 0 ; i < programmes.size(); i++){
-           if(programmes.get(i).getId() == course ){
-               return programmes.get(i).toString();
+           if(programmes.get(i).getId().equals(course )){
+               System.out.println(programmes.get(i).toString());
            }
        }
        return "";
