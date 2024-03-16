@@ -14,7 +14,16 @@ public class Server {
     private static ServerSocket servsock;
     private static final int PORT = 1234;
 
-
+    private static void run() {
+        try {
+            while (true) {
+                Socket link = servsock.accept();
+            }
+        } catch (IOException e) {
+            System.out.println("Connection failed");
+            System.exit(1);
+        }
+    }
     private static void socketHandler(Socket link) {
         while (true) {
             try {
@@ -172,7 +181,7 @@ public class Server {
             System.out.println("Unable to attach to port!");
             System.exit(1);
         }
-        socketHandler(link);
+        run();
     }
 
 
