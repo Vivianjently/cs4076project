@@ -5,6 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
+
+    private Course course;
     private static ServerSocket servsock;
     private static final int PORT = 1234;
     private static void run() {
@@ -35,9 +37,16 @@ public class Server {
     private static String processedMessage(String message){
         String code;
         String data;
+        String date;
+        String course;
+        String module;
+        String timeSlot;
+
 
         code = message.split("=")[0];
         data = message.split("=")[1];
+
+
 
         switch(code){
             case"ADD_CLASS":
@@ -52,9 +61,15 @@ public class Server {
         }
     }
 
-    private static String ADD_CLASS(String data){
-
+    private static void ADD_CLASS (String data){
+        String processedData = processedMessage(data);
+        String date = processedData.split(",")[0];
+        String course = processedData.split(",")[1];
+        String module = processedData.split(",")[2];
+        String time = processedData.split(",")[3];
     }
+
+    private static void REMOVE_CLASS (+)
 
     private class IncorrectActionException extends Exception{
         private IncorrectActionException(){
