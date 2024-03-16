@@ -53,7 +53,7 @@ public class Server {
     }
 
     private static String ADD_CLASS(String data){
-        
+
     }
 
     private class IncorrectActionException extends Exception{
