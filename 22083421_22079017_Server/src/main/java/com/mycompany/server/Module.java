@@ -6,16 +6,15 @@ import java.time.LocalTime;
 public class Module {
    private String id;
    private LocalDate date;
-   private LocalTime time;
+   private LocalTime startTime;
+   private LocalTime endTime;
    private String room;
 
     public void setRoom(String room) {
         this.room = room;
     }
 
-    public void setTime(LocalTime time) {
-        this.time = time;
-    }
+
 
     public void setDate(LocalDate date) {
         this.date = date;
@@ -29,8 +28,21 @@ public class Module {
         return room;
     }
 
-    public LocalTime getTime() {
-        return time;
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalTime getEndTime() {
+        return endTime;
+    }
+
+    public LocalTime getStartTime() {
+        return startTime;
     }
 
     public LocalDate getDate() {
