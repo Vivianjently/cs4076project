@@ -44,5 +44,16 @@ public class Course {
      this.id = id;
 
     }
+    public String toString(){
+       String result =  "Course Time Table for - "+this.id+" is \n";
+       for(int i=0;i<modules.size();i++ ){
+
+           result+= modules.get(i).toString()+"\n";
+
+
+
+       }
+       return result;
+    }
 
 }
