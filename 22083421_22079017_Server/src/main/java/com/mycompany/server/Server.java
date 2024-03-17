@@ -153,20 +153,25 @@ public class Server {
         }
 
         Module Class = new Module(module, room, date, startTime, endTime);
-        boolean isFound = false;
+        boolean courseFound = false;
+        boolean moduleFound = false;
         for (int z = 0; z < programmes.size(); z++) {
 
             if (programmes.get(z).getId() == course) {
-                programmes.get(z).removeModule(Class);
-                isFound = true;
+                courseFound = true;
+                if (courseFound) {
+                    for (int k = 0; k < programmes.get(z).getModuleCount(); k++) {
+                        if (programmes.get(z).getModules().get(k).getId() == module) {
+                            moduleFound = true;
+                            programmes.get(z).removeModule(Class);
+                        } else throw new IncorrectActionException("Module not found!");
+                    }
+                }
+
 
             }
         }
-        if (!isFound) {
-            Course programme = new Course(course);
-            programme.removeModule(Class);
-            isFound = true;
-        } else throw new IncorrectActionException("Module not found");
+        if (!courseFound) throw new IncorrectActionException("Course not found!");
     }
 
     private static void TERMINATE() {

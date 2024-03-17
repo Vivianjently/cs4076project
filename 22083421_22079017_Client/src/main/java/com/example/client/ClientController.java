@@ -71,13 +71,30 @@ public class ClientController {
         time.setVisible(true);
         room.setVisible(true);
         datePicker.setVisible(true);
+        if(submit2.isVisible()){
+            submit2.setVisible(false);
+        }
+        if(submit3.isVisible()){
+            submit3.setVisible(false);
+        }
         submit1.setVisible(true);
 
     }
 
     @FXML
     void displayEventAAction(ActionEvent event) {
+        moduleCode.setVisible(false);
+        time.setVisible(false);
+        room.setVisible(false);
+        datePicker.setVisible(false);
+
         course.setVisible(true);
+        if(submit1.isVisible()){
+            submit1.setVisible(false);
+        }
+        if(submit2.isVisible()) {
+            submit2.setVisible(false);
+        }
         submit3.setVisible(true);
 
     }
@@ -91,7 +108,14 @@ public class ClientController {
         time.setVisible(true);
         room.setVisible(true);
         datePicker.setVisible(true);
+        if(submit1.isVisible()){
+            submit1.setVisible(false);
+        }
+        if(submit3.isVisible()) {
+            submit3.setVisible(false);
+        }
         submit2.setVisible(true);
+
 
 
 
@@ -105,6 +129,11 @@ public class ClientController {
         room.setVisible(false);
         moduleCode.setVisible(false);
         datePicker.setVisible(false);
+        course.setVisible(false);
+        submit1.setVisible(false);
+        submit2.setVisible(false);
+        submit3.setVisible(false);
+
 
         try {
             connection.sendMessage("TERMINATE_CONNECTION=---");
