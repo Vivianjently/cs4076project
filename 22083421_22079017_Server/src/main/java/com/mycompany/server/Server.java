@@ -70,6 +70,46 @@ public class Server {
                 case "TERMINATE_CONNECTION":
                     return "Connection Terminated!";
 
+<<<<<<< Updated upstream
+=======
+
+        try {
+            switch (code) {
+                case "ADD_CLASS":
+                    out.println(addClass(data));
+                case "REMOVE_CLASS":
+                    return;
+                case "DISPLAY_SCHEDULE":
+                    return;
+                case "TERMINATE_CONNECTION":
+                    return;
+
+            }
+        } catch(IncorrectActionException e){
+            out.println(addClass);
+        }
+    }
+
+    private static String addClass (String data) throws IncorrectActionException{
+        String date = data.split(",")[0];
+        String course = data.split(",")[1];
+        String module = data.split(",")[2];
+        String time = data.split(",")[3];
+
+        //Check data
+
+        //check overlap
+        //add mod
+
+        return "success";
+    }
+
+    private static void REMOVE_CLASS (+)
+
+    private class IncorrectActionException extends Exception{
+        private IncorrectActionException(){
+            super();
+>>>>>>> Stashed changes
             }
         } catch (IncorrectActionException e) {
             return e.getMessage();
