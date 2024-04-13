@@ -26,28 +26,29 @@ public class Server {
             System.exit(1);
         }
     }
+
     private static void socketHandler(Socket link) {
-            try {
-                BufferedReader in = new BufferedReader(new InputStreamReader(link.getInputStream()));
-                PrintWriter out = new PrintWriter(link.getOutputStream(), true);
+        try {
+            BufferedReader in = new BufferedReader(new InputStreamReader(link.getInputStream()));
+            PrintWriter out = new PrintWriter(link.getOutputStream(), true);
 
-                while(true) {
-                    String message = in.readLine();
-                    System.out.println("Message received from client: " + message);
+            while (true) {
+                String message = in.readLine();
+                System.out.println("Message received from client: " + message);
 
-                    String response = processedMessage(message);
+                String response = processedMessage(message);
 
-                    if(response.equals("Connection Terminated!")){
-                        out.println(response);
-                        TERMINATE();
-                    }
-
-                    out.println();
+                if (response.equals("Connection Terminated!")) {
+                    out.println(response);
+                    TERMINATE();
                 }
 
-            } catch (IOException e) {
-                System.out.println("Input or Output not detected");
+                out.println(response);
             }
+
+        } catch (IOException e) {
+            System.out.println("Input or Output not detected");
+        }
     }
 
     private static String processedMessage(String message) {
@@ -66,12 +67,13 @@ public class Server {
                     return ("Class Removed");
                 case "DISPLAY_SCHEDULE":
                     DISPLAY_SCHEDULE(data);
-                    return("Schedule displayed!");
+                    return ("Schedule displayed!");
                 case "TERMINATE_CONNECTION":
                     return "Connection Terminated!";
 
             }
-        } catch (IncorrectActionException e) {
+        } catch (IncorrectActionException e)  {
+            System.out.println("error coaght");
             return e.getMessage();
         }
         return "";
@@ -98,38 +100,51 @@ public class Server {
             System.out.println("Please enter data in all the fields");
             throw new IncorrectActionException("Please check if all fields are filled!");
         }
+        Module moduleToAdd = new Module(module, room, date, startTime, endTime);
 
         //Goes through each module in every course and checks if the time overlaps.
         //Then it checks if this module is being added to the course, if so then throw overlap error.
         //It also checks to see if room number is the same because then the module overlaps with a module from another course
+
         for (int i = 0; i < programmes.size(); i++) {
             for (int k = 0; k < programmes.get(i).getModules().size(); k++) {
                 Module curMod = programmes.get(i).getModules().get(k);
-                if(curMod.getStartTime().isBefore(LocalTime.parse(startTime)) &&
-                   LocalTime.parse(endTime).isBefore(curMod.getEndTime()) &&
-                   curMod.getDate().equals(LocalDate.parse(date))) {
-                    if (curMod.getRoom().equals(room) || programmes.get(i).getId().equals(splitData[1])){
-                        throw new IncorrectActionException("Missing data");
-                    }
+                if (curMod.clashes(moduleToAdd)){
+                    System.out.println("found clash");
+                    throw new IncorrectActionException("Time overlaps with another module");
+                }else if (curMod.equals(moduleToAdd)) {
+                    System.out.println("modules are equal");
+                    throw new IncorrectActionException("Module already exists");
                 }
+                //(curMod.getStartTime().isBefore(LocalTime.parse(startTime)) &&
+                     //   LocalTime.parse(endTime).isBefore(curMod.getEndTime()) &&
+                       // curMod.getDate().equals(LocalDate.parse(date)))
+//                {
+//                    if (curMod.getRoom().equals(room) || programmes.get(i).getId().equals(splitData[1])) {
+//                        throw new IncorrectActionException("Missing data");
+//                    }
+//                }
+//                else throw new IncorrectActionException("Time overlaps with another module");
             }
+
         }
 
-        Module Class = new Module(module, room, date, startTime, endTime);
+
         boolean isFound = false;
         for (int z = 0; z < programmes.size(); z++) {
 
             if (programmes.get(z).getId() == course) {
-                programmes.get(z).addModule(Class);
+                programmes.get(z).addModule(moduleToAdd);
                 isFound = true;
 
             }
         }
         if (!isFound) {
             Course programme = new Course(course);
-            programme.addModule(Class);
+            programme.addModule(moduleToAdd);
             programmes.add(programme);
         }
+
     }
 
     private static void REMOVE_CLASS(String data) throws IncorrectActionException {
@@ -187,12 +202,12 @@ public class Server {
     private static String DISPLAY_SCHEDULE(String data) {
         String course;
         course = data;
-       for(int i = 0 ; i < programmes.size(); i++){
-           if(programmes.get(i).getId().equals(course )){
-               System.out.println(programmes.get(i).toString());
-           }
-       }
-       return "";
+        for (int i = 0; i < programmes.size(); i++) {
+            if (programmes.get(i).getId().equals(course)) {
+                System.out.println(programmes.get(i).toString());
+            }
+        }
+        return "";
     }
 
     public static void main(String[] args) {
@@ -204,7 +219,4 @@ public class Server {
         }
         run();
     }
-
-
-    }
-
+}

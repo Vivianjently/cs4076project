@@ -14,8 +14,10 @@ public class TCPCommunication {
     static PrintWriter out;
     static BufferedReader in;
     static Socket link;
+    public boolean isRunning = true;
 
     public TCPCommunication() {
+
         try {
             host = InetAddress.getLocalHost();
             link = new Socket(host, PORT);
@@ -29,25 +31,41 @@ public class TCPCommunication {
             System.err.println("Error while communicating with the server.");
             e.printStackTrace();
         }
+       new Thread (this::receiveMessage).start();
     }
     public   void sendMessage(String message) throws IOException {
         out.println(message);
+    }
+    public void receiveMessage()  {
+        String response = "";
+         try {
+             while (isRunning &&(response = in.readLine()) != null) {
 
-        String response = in.readLine();
+                 if (response.equals("Connection Terminated!")) {
+                     closeConnection();
+                 }
+                 System.out.println(response);
 
-        if(response.equals("Connection Terminated!")){
-            closeConnection();
-            System.exit(0);
-        }
+             }
 
-        System.out.println(response);
+
+         } catch (IOException e) {
+             if (isRunning==false){
+                 return;
+             }
+             System.out.println("Error while receiving message from server");
+             e.printStackTrace();
+         }
+
     }
     public  void closeConnection(){
+      isRunning= false;
         try {
             link.close();
             System.out.println("Connection has been closed");
         } catch (IOException e) {
             System.exit(1);
         }
+        System.exit(0);
     }
 }
